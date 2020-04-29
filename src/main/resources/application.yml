@@ -1,0 +1,34 @@
+spring:
+  # 发送邮件相关参数
+  mail:
+    host: smtp.exmail.qq.com
+    username: jiale@icube.fun
+    password: APTX4869aptx
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+
+  datasource:
+    # 数据库创建指令，用户：javaweb；密码：JavaWeb2020；数据库：javaweb
+    # create database javaweb;
+    # create user 'javaweb'@'localhost' identified by 'JavaWeb2020';
+    # grant all privileges on javaweb.* to 'javaweb'@'localhost' with grant option;
+    url: jdbc:mysql://localhost:3306/javaweb?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    username: javaweb
+    password: JavaWeb2020
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    # 将SQL语句写入日志文件
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      # 自动更新表
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        format_sql: true
