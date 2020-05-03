@@ -4,12 +4,14 @@ import javaweb.remember.entity.User;
 import javaweb.remember.entity.VerifyCode;
 import javaweb.remember.repository.UserRepository;
 import javaweb.remember.repository.VerifyCodeRepository;
+import javaweb.remember.service.PhotoService;
 import javaweb.remember.service.VerifyCodeService;
 import javaweb.remember.utils.MD5Encode;
 import javaweb.remember.utils.RandomNumber;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -32,6 +34,8 @@ public class UserController {
     VerifyCodeRepository verifyCodeRepository;
     @Autowired
     VerifyCodeService verifyCodeService;
+    @Autowired
+    PhotoService photoService;
 
 
     /**
@@ -175,5 +179,16 @@ public class UserController {
             result.put("Messenger", "登录失败，请核对密码");
         }
         return result.toString();
+    }
+
+    /**
+     * @param type 图片类型
+     * @return 图片，可以在浏览器直接输入URL访问
+     */
+    @GetMapping(value = "/image/{type}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @ResponseBody
+    public byte[] getImage(
+            @PathVariable("type") String type) throws Exception {
+        return photoService.getImage(type, "test");
     }
 }
