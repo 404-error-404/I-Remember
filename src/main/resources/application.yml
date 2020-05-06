@@ -17,9 +17,10 @@ spring:
     # create database javaweb;
     # create user 'javaweb'@'localhost' identified by 'JavaWeb2020';
     # grant all privileges on javaweb.* to 'javaweb'@'localhost' with grant option;
-    url: jdbc:mysql://localhost:3306/javaweb?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
-    username: javaweb
-    password: JavaWeb2020
+    url: jdbc:mysql://39.98.32.66:3306/iremember?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    username: IRemember
+    password: Remember2020
+
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     # 将SQL语句写入日志文件
