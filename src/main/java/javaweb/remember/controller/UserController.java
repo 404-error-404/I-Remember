@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 /**
@@ -43,7 +46,6 @@ public class UserController {
      * @param email 待收取验证码的邮箱
      * @return 返回Json格式结果
      * */
-    @CrossOrigin
     @PostMapping("/verify_code/")
     public String send_verify_code(@RequestParam(value = "email") String email) throws JSONException {
         // 待返回的结果
@@ -143,6 +145,7 @@ public class UserController {
      */
     @PostMapping(value = "/login/")
     public String userLogin(
+            HttpServletResponse httpServletResponse,
             @RequestParam(value = "email") String email,
             @RequestParam(value = "password") String password
     ) throws Exception {
@@ -161,6 +164,8 @@ public class UserController {
             // 保存登录时间和token
             user.setLastLogin(now);
             user.setToken(token);
+            Cookie cookie = new Cookie("token", token);
+            httpServletResponse.addCookie(cookie);
             userRepository.save(user);
 
             // 获取用户信息
