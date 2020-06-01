@@ -119,7 +119,7 @@ public class UserController {
         else if (null != userRepository.findByEmail(email)) {
             // 不为空则说明该用户已注册
             result.put("StatusCode", -5);
-            result.put("Messenger", "您已注册过iFlag，请直接登录");
+            result.put("Messenger", "您已注册过I-Remember，请直接登录");
         }
         // 保存到数据库
         else {
