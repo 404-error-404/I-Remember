@@ -1,8 +1,6 @@
 package javaweb.remember.service;
 
 
-import javaweb.remember.entity.VerifyCode;
-import javaweb.remember.repository.VerifyCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,8 +19,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class VerifyCodeService {
-    @Autowired
-    VerifyCodeRepository verifyCodeRepository;
     // 发送邮件
     @Autowired
     private JavaMailSender mailSender;

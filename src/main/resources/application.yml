@@ -1,4 +1,7 @@
 spring:
+  redis:
+    host: 39.98.32.66
+    port: 6379
   # 发送邮件相关参数
   mail:
     host: smtp.exmail.qq.com
@@ -33,3 +36,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+email:
+  subject: "I Remember"
+  content-start: "欢迎您使用I Remember，您本次的验证码是"
+  content-end: "，验证码5分钟内有效，请及时使用。"

@@ -6,7 +6,7 @@ import javaweb.remember.enumeration.ResultEnum;
 public class ResultVo {
     private int code;
     private String message;
-    private Object data;
+    private Object data = null;
 
     public ResultVo() {
     }
