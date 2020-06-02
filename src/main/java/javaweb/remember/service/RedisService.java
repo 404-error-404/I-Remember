@@ -9,35 +9,34 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
-@Service
-public class RedisService {
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
+public interface RedisService {
     /**
      * 存储键值对
      * @param key 键
      * @param value 值
      */
-    public void set(String key,String value){
-        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
-        ops.set(key, value);
-    }
+    void set(String key, String value);
 
-    public String get(String key){
-        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
-        return ops.get(key);
-    }
+    /**
+     * 根据key来获取value
+     * @param key 键
+     * @return 值
+     */
+    String get(String key);
 
-    public boolean expire(String key, long expire) {
-        return stringRedisTemplate.expire(key, expire, TimeUnit.SECONDS);
-    }
+    /**
+     * 给键值对设置过期时间
+     * @param key 要设置的键值对的键
+     * @param expire 过期时间（单位为秒）
+     * @return 是否设置成功
+     */
+    boolean expire(String key, long expire);
 
-    public void delete(String key) {
-        stringRedisTemplate.delete(key);
-    }
+    /**
+     * 删除键值对
+     * @param key 要删除的键值对的键
+     */
+    void delete(String key);
 
-    public Long increment(String key, long delta) {
-        return stringRedisTemplate.opsForValue().increment(key,delta);
-    }
+
 }

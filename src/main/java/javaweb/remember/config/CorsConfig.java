@@ -1,4 +1,4 @@
-//Author:刘行
+package javaweb.remember.config;//Author:刘行
 //配置跨域请求
 
 import org.springframework.context.annotation.Bean;

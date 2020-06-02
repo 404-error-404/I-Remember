@@ -2,18 +2,20 @@ package javaweb.remember.controller;
 
 import javaweb.remember.entity.User;
 import javaweb.remember.enumeration.ResultEnum;
-import javaweb.remember.repository.UserRepository;
-import javaweb.remember.service.PhotoService;
 import javaweb.remember.service.RedisService;
+import javaweb.remember.service.UserService;
 import javaweb.remember.service.VerifyCodeService;
 import javaweb.remember.utils.RandomNumber;
 import javaweb.remember.vo.ResultVo;
 import javaweb.remember.vo.SignUpVo;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.*;
@@ -40,11 +42,9 @@ public class UserController {
     private String content_end;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
     @Autowired
     VerifyCodeService verifyCodeService;
-    @Autowired
-    PhotoService photoService;
     @Autowired
     private RedisService redisService;
 
@@ -89,7 +89,7 @@ public class UserController {
     public ResultVo userSignUp(@RequestBody SignUpVo signUpVo) {
         String code = redisService.get(signUpVo.getEmail());
         //用户名已注册
-        if (userRepository.findByEmail(signUpVo.getEmail()) != null) {
+        if (userService.findByEmail(signUpVo.getEmail()) != null) {
             return new ResultVo(ResultEnum.HAVE_REGISTERED);
         }
         //验证码失效
@@ -101,11 +101,13 @@ public class UserController {
             return new ResultVo(ResultEnum.VERIFICATION_CODE_INCORRECT);
         }
         //注册成功
+        //删除redis中的验证码
+        redisService.delete(signUpVo.getEmail());
         User user = new User();
         user.setEmail(signUpVo.getEmail());
         user.setUsername(signUpVo.getUsername());
         user.setPassword(signUpVo.getPassword());
-        userRepository.save(user);
+        userService.save(user);
 
         return new ResultVo(ResultEnum.REGISTER_SUCCESS);
     }
@@ -119,17 +121,15 @@ public class UserController {
      */
     @PostMapping(value = "/login")
     public ResultVo userLogin(
-            HttpServletResponse httpServletResponse,
             @RequestParam(value = "email")
             @Email @NotBlank(message = "邮箱不能为空")
             @NotNull(message = "邮箱不能为空") String email,
             @RequestParam(value = "password")
             @NotNull(message = "密码不能为空")
             @NotBlank(message = "密码不能为空")
-            @Max(value = 20, message = "密码太长啦")
-            @Min(value = 6, message = "密码太短啦") String password
+            @Length(min = 6,max = 20) String password
     ) {
-        User user = userRepository.findByEmail(email);
+        User user = userService.findByEmail(email);
         if(user==null){
             return new ResultVo(ResultEnum.HAVE_NOT_REGISTERED);
         }
@@ -138,22 +138,21 @@ public class UserController {
         }
         String token = UUID.randomUUID().toString();
         //若该用户已登录，删除redis中已有的token，写入新的token，并设置过期时间
-        redisService.delete(email);
-        redisService.set(user.getId().toString(),token);
-        redisService.expire(user.getId().toString(),USER_TOKEN_EXPIRE_TIME);
+        redisService.set(token,user.getId().toString());
+        redisService.expire(token,USER_TOKEN_EXPIRE_TIME);
         ResultVo resultVo = new ResultVo(ResultEnum.LOGIN_SUCCESS);
         resultVo.setData(token);
         return resultVo;
     }
 
-    /**
-     * @param type 图片类型
-     * @return 图片，可以在浏览器直接输入URL访问
-     */
-    @GetMapping(value = "/image/{type}", produces = MediaType.IMAGE_JPEG_VALUE)
-    @ResponseBody
-    public byte[] getImage(
-            @PathVariable("type") String type) throws Exception {
-        return photoService.getImage(type, "test");
-    }
+//    /**
+//     * @param type 图片类型
+//     * @return 图片，可以在浏览器直接输入URL访问
+//     */
+//    @GetMapping(value = "/image/{type}", produces = MediaType.IMAGE_JPEG_VALUE)
+//    @ResponseBody
+//    public byte[] getImage(
+//            @PathVariable("type") String type) throws Exception {
+//        return photoService.getImage(type, "test");
+//    }
 }
