@@ -11,6 +11,7 @@ public class DataBaseArrayUtils {
         StringBuilder str = new StringBuilder();
         for (String s : strs) {
             str.append(s);
+            str.append(SEPARATOR);
         }
         return str.toString();
     }
