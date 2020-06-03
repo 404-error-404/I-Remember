@@ -24,9 +24,6 @@ public class MemoryController {
     @Autowired
     private MemoryService memoryService;
 
-    @Autowired
-    private RedisService redisService;
-
     @PostMapping("/saveMemory")
     public ResultVo save(@RequestParam("memoryName") String title,
                          @RequestParam("labelList") String[] tags,
@@ -43,9 +40,6 @@ public class MemoryController {
 
         //图片储存
         for(MultipartFile image:images){
-            //if(image.isEmpty()){
-            //    return (new ResultVo(0,"没有上传图片！",null));
-            //}
             String newImageName = ImageNameUtils.reFileName(image.getOriginalFilename(), userId);
             File dest = new File(path + "/" + newImageName);
             if(!dest.getParentFile().exists()){ //判断文件父目录是否存在
@@ -84,6 +78,29 @@ public class MemoryController {
         else{
             resultVo = new ResultVo(ResultEnum.REMEMBER_PUBLISH_FAIL);
         }
+        return resultVo;
+    }
+
+
+    @PostMapping("/memoryShow")
+    public ResultVo memoryShow(@RequestParam("memoryID") Long memoryId){
+
+        Map<String,Object> memory = new HashMap<>();
+        ResultVo resultVo;
+        Memory m = memoryService.findById(memoryId);
+        if(m == null){
+            resultVo = new ResultVo(ResultEnum.MEMORY_SHOW_FAIL);
+            return resultVo;
+        }
+
+        memory.put("name",m.getTitle());
+        memory.put("labelList",DataBaseArrayUtils.StringToArray(m.getTags()));
+        memory.put("content",m.getContent());
+        memory.put("imgUrls",DataBaseArrayUtils.StringToArray(m.getImages()));
+        memory.put("time",m.getCreateTime());
+
+        resultVo = new ResultVo(ResultEnum.MEMORY_SHOW_SUCCESS);
+        resultVo.setData(memory);
         return resultVo;
     }
 }
