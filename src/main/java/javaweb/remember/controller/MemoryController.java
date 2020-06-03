@@ -49,10 +49,7 @@ public class MemoryController {
                 image.transferTo(dest); //保存文件
                 allImages[num] = newImageName;
                 num++;
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-                return new ResultVo(-100, e.getMessage(), null);
-            } catch (IOException e) {
+            } catch (IllegalStateException | IOException e) {
                 e.printStackTrace();
                 return new ResultVo(-100, e.getMessage(), null);
             }
