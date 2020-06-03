@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -21,7 +22,11 @@ public class MemoryScheduler {
     @Scheduled(cron = "0 0 0 ? * *")
     @Transactional
     public void memoryDisappear(){
-        String nowDate =new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        memoryRepository.memoryDisappear(nowDate);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MONTH, -6);
+        Date nowDate = calendar.getTime();
+        memoryRepository.memoryDisappear(formatter.format(nowDate));
     }
 }
