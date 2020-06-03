@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class MemoryController {
@@ -33,6 +35,7 @@ public class MemoryController {
                          HttpServletRequest request){
 
         ResultVo resultVo = new ResultVo();
+        Map<String, Object> memoryId = new HashMap<>();
         String[] allImages = new String[images.length];
         Long userId = (Long)request.getAttribute("id");
         String path = System.getProperty("user.dir") + "/image/";
@@ -75,6 +78,8 @@ public class MemoryController {
 
         if(m2 != null){
             resultVo = new ResultVo(ResultEnum.REMEMBER_PUBLISH_SUCCESS);
+            memoryId.put("memoryID",m2.getId());
+            resultVo.setData(memoryId);
         }
         else{
             resultVo = new ResultVo(ResultEnum.REMEMBER_PUBLISH_FAIL);
