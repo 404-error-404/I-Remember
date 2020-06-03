@@ -1,6 +1,7 @@
 package javaweb.remember.controller;
 
 import javaweb.remember.entity.Memory;
+import javaweb.remember.enumeration.ResultEnum;
 import javaweb.remember.service.MemoryService;
 import javaweb.remember.service.RedisService;
 import javaweb.remember.utils.DataBaseArrayUtils;
@@ -53,8 +54,10 @@ public class MemoryController {
                 num++;
             } catch (IllegalStateException e) {
                 e.printStackTrace();
+                return new ResultVo(-100, e.getMessage(), null);
             } catch (IOException e) {
                 e.printStackTrace();
+                return new ResultVo(-100, e.getMessage(), null);
             }
         }
 
@@ -71,14 +74,10 @@ public class MemoryController {
         m2 = memoryService.save(m);
 
         if(m2 != null){
-            resultVo.setCode(1);
-            resultVo.setMessage("记忆发布成功！");
-            resultVo.setData(null);
+            resultVo = new ResultVo(ResultEnum.REMEMBER_PUBLISH_SUCCESS);
         }
         else{
-            resultVo.setCode(0);
-            resultVo.setMessage("记忆发布失败！");
-            resultVo.setData(null);
+            resultVo = new ResultVo(ResultEnum.REMEMBER_PUBLISH_FAIL);
         }
         return resultVo;
     }
