@@ -8,6 +8,7 @@ import javaweb.remember.service.VerifyCodeService;
 import javaweb.remember.utils.RandomNumber;
 import javaweb.remember.vo.ResultVo;
 import javaweb.remember.vo.SignUpVo;
+import javaweb.remember.vo.UserInfoVo;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.*;
 import java.util.UUID;
 
@@ -61,7 +62,7 @@ public class UserController {
      * @return 返回Json格式结果
      */
     @PostMapping("/verify_code")
-    public ResultVo sendVerifyCode(@RequestParam(value = "email")
+    public ResultVo sendVerifyCode(@RequestParam("email")
                                    @NotNull(message = "邮箱不能为空")
                                    @NotBlank(message = "邮箱不能为空")
                                    @Email(message = "邮箱格式错误") String email) {
@@ -83,7 +84,6 @@ public class UserController {
         }
         return new ResultVo(ResultEnum.SEND_VERIFICATION_CODE_FAIL);
     }
-
 
     @PostMapping(value = "/sign_up")
     public ResultVo userSignUp(@RequestBody SignUpVo signUpVo) {
@@ -121,25 +121,25 @@ public class UserController {
      */
     @PostMapping(value = "/login")
     public ResultVo userLogin(
-            @RequestParam(value = "email")
+            @RequestParam(name = "email")
             @Email @NotBlank(message = "邮箱不能为空")
             @NotNull(message = "邮箱不能为空") String email,
-            @RequestParam(value = "password")
+            @RequestParam(name = "password")
             @NotNull(message = "密码不能为空")
             @NotBlank(message = "密码不能为空")
-            @Length(min = 6,max = 20) String password
+            @Length(min = 6, max = 20) String password
     ) {
         User user = userService.findByEmail(email);
-        if(user==null){
+        if (user == null) {
             return new ResultVo(ResultEnum.HAVE_NOT_REGISTERED);
         }
-        if(!user.getPassword().equals(password)){
+        if (!user.getPassword().equals(password)) {
             return new ResultVo(ResultEnum.PASSWORD_INCORRECT);
         }
         String token = UUID.randomUUID().toString();
         //若该用户已登录，删除redis中已有的token，写入新的token，并设置过期时间
-        redisService.set(token,user.getId().toString());
-        redisService.expire(token,USER_TOKEN_EXPIRE_TIME);
+        redisService.set(token, email);
+        redisService.expire(token, USER_TOKEN_EXPIRE_TIME);
         ResultVo resultVo = new ResultVo(ResultEnum.LOGIN_SUCCESS);
         resultVo.setData(token);
         return resultVo;
@@ -155,4 +155,76 @@ public class UserController {
 //            @PathVariable("type") String type) throws Exception {
 //        return photoService.getImage(type, "test");
 //    }
+
+    @PostMapping("/userInfo")
+    public ResultVo getUserInfo(HttpServletRequest request) {
+        Long id = (Long) request.getAttribute("id");
+        UserInfoVo userInfoVo = userService.findUserInfoVoById(id);
+        if (userInfoVo == null) {
+            return new ResultVo(ResultEnum.HAVE_NOT_REGISTERED);
+        }
+        ResultVo resultVo = new ResultVo(ResultEnum.GET_USER_INFO_SUCCESS);
+        resultVo.setData(userInfoVo);
+        return resultVo;
+    }
+
+    @PostMapping("/username")
+    public ResultVo changeUsername(HttpServletRequest request,
+                                   @RequestParam("username")
+                                   @NotBlank @NotNull String username) {
+        Long id = (Long) request.getAttribute("id");
+        if (userService.changeUsername(id, username)) {
+            return new ResultVo(ResultEnum.CHANGE_USERNAME_SUCCESS);
+        }
+        return new ResultVo(ResultEnum.CHANGE_USERNAME_FAIL);
+    }
+
+    @PostMapping("/birthday")
+    public ResultVo changeBirthday(HttpServletRequest request,
+                                   @RequestParam("birthday")
+                                   @NotBlank @NotNull String birthday) {
+        Long id = (Long) request.getAttribute("id");
+        if (userService.changeBirthday(id, birthday)) {
+            return new ResultVo(ResultEnum.CHANGE_BIRTHDAY_SUCCESS);
+        }
+        return new ResultVo(ResultEnum.CHANGE_BIRTHDAY_FAIL);
+    }
+
+    @PostMapping("/personalSignature")
+    public ResultVo changePersonalSignature(HttpServletRequest request,
+                                            @RequestParam("personalSignature")
+                                            @NotNull String personalSignature) {
+        Long id = (Long) request.getAttribute("id");
+        if (userService.changePersonalSignature(id, personalSignature)) {
+            return new ResultVo(ResultEnum.CHANGE_SIGNATURE_SUCCESS);
+        }
+        return new ResultVo(ResultEnum.CHANGE_SIGNATURE_FAIL);
+    }
+
+    @PostMapping("/password")
+    public ResultVo changePassword(HttpServletRequest request,
+                                   @RequestParam("newPassword")
+                                   @Length(min = 6,max = 20)
+                                   @NotNull @NotBlank String newPassword,
+                                   @RequestParam("code")
+                                   @NotNull @NotBlank String code) {
+        Long id = (Long) request.getAttribute("id");
+        String email = userService.findEmailById(id);
+        String verificationCode = redisService.get(email);
+        //验证码失效
+        if (verificationCode == null) {
+            return new ResultVo(ResultEnum.VERIFICATION_CODE_FAILURE);
+        }
+        //验证码错误
+        if (!verificationCode.equals(code)) {
+            return new ResultVo(ResultEnum.VERIFICATION_CODE_INCORRECT);
+        }
+        //验证码正确，删除redis中的验证码
+        redisService.delete(email);
+        if (userService.changePassword(id, newPassword)) {
+            return new ResultVo(ResultEnum.CHANGE_PASSWORD_SUCCESS);
+        }
+        return new ResultVo(ResultEnum.CHANGE_PASSWORD_FAIL);
+    }
+
 }
