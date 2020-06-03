@@ -1,10 +1,9 @@
 //Author:刘行
 package javaweb.remember.service;
 
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import javaweb.remember.entity.Memory;
 
 public interface MemoryService {
 
-
+    Memory save(Memory memory);
 }
