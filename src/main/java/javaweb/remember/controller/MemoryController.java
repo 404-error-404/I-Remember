@@ -34,7 +34,7 @@ public class MemoryController {
         ResultVo resultVo = new ResultVo();
         String[] allImages = new String[images.length];
         Long userId = (Long)request.getAttribute("id");
-        String path = "./image";
+        String path = System.getProperty("user.dir") + "/image/";
         int num = 0;
 
         //图片储存
