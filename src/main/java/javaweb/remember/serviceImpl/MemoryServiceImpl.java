@@ -15,4 +15,7 @@ public class MemoryServiceImpl implements MemoryService {
 
     @Override
     public Memory save(Memory memory){return memoryRepository.save(memory);}
+
+    @Override
+    public Memory findById(Long ID){return memoryRepository.findById(ID).get();}
 }

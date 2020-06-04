@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,5 +28,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IOException.class)
     public ResultVo handleIOException(IOException e){
         return new ResultVo(-100, e.getMessage(), null);
+    }
+
+    //空指针异常
+    @ExceptionHandler(java.util.NoSuchElementException.class)
+    public ResultVo handleNoSuchElementException(NoSuchElementException e){
+        return new ResultVo(-100,e.getMessage(),null);
     }
 }

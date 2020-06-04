@@ -13,6 +13,7 @@ public enum ResultEnum {
     GET_USER_INFO_SUCCESS(7,"获取用户信息成功"),
     CHANGE_PASSWORD_SUCCESS(8,"修改密码成功"),
     REMEMBER_PUBLISH_SUCCESS(11,"记忆发布成功"),
+    MEMORY_SHOW_SUCCESS(12,"记忆显示成功"),
 
     SEND_VERIFICATION_CODE_FAIL(-1,"验证码发送失败"),
     NO_LOGIN(-2,"请先登录"),
@@ -26,6 +27,7 @@ public enum ResultEnum {
     CHANGE_SIGNATURE_FAIL(-10,"修改个性签名失败"),
     CHANGE_PASSWORD_FAIL(-11,"修改密码失败"),
     REMEMBER_PUBLISH_FAIL(-20,"记忆发布失败"),
+    MEMORY_SHOW_FAIL(-21,"记忆显示失败"),
     ;
     private int code;
     private String message;
