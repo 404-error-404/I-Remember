@@ -1,6 +1,7 @@
 package javaweb.remember.controller;
 
 import javaweb.remember.entity.Memory;
+import javaweb.remember.enumeration.MemoryTagsEnum;
 import javaweb.remember.enumeration.ResultEnum;
 import javaweb.remember.service.MemoryService;
 import javaweb.remember.service.PhotoService;
@@ -119,5 +120,24 @@ public class MemoryController {
         else {
             return photo;
         }
+    }
+
+    @PostMapping("/getTags")
+    public ResultVo getTags(){
+        ResultVo resultVo;
+        Map<String, Object> map = new HashMap<>();
+        String[] tagsArray = new String[MemoryTagsEnum.values().length];
+        int num = 0;
+
+        for (MemoryTagsEnum e : MemoryTagsEnum.values()) {
+            tagsArray[num] = e.getTag();
+            num++;
+        }
+
+        map.put("tabs",tagsArray);
+        resultVo = new ResultVo(ResultEnum.TAGS_GET_SUCCESS);
+        resultVo.setData(map);
+
+        return resultVo;
     }
 }
