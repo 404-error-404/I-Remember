@@ -3,11 +3,13 @@ package javaweb.remember.controller;
 import javaweb.remember.entity.Memory;
 import javaweb.remember.enumeration.ResultEnum;
 import javaweb.remember.service.MemoryService;
+import javaweb.remember.service.PhotoService;
 import javaweb.remember.service.RedisService;
 import javaweb.remember.utils.DataBaseArrayUtils;
 import javaweb.remember.utils.ImageNameUtils;
 import javaweb.remember.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,9 @@ public class MemoryController {
     @Autowired
     private MemoryService memoryService;
 
+    @Autowired
+    private PhotoService photoService;
+
     @PostMapping("/saveMemory")
     public ResultVo save(@RequestParam("memoryName") String title,
                          @RequestParam("labelList") String[] tags,
@@ -31,7 +36,7 @@ public class MemoryController {
                          @RequestParam("images") MultipartFile[] images,
                          HttpServletRequest request){
 
-        ResultVo resultVo = new ResultVo();
+        ResultVo resultVo;
         Map<String, Object> memoryId = new HashMap<>();
         String[] allImages = new String[images.length];
         Long userId = (Long)request.getAttribute("id");
@@ -99,5 +104,20 @@ public class MemoryController {
         resultVo = new ResultVo(ResultEnum.MEMORY_SHOW_SUCCESS);
         resultVo.setData(memory);
         return resultVo;
+    }
+
+    @GetMapping(value = "/get-photo", produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getPhotoTest(@RequestParam("photo_name") String photo_name) throws Exception {
+        //String photo_path = "K:\\Java Projects\\I-Remember\\image\\" + photo_name;
+        String photo_path = System.getProperty("user.dir") + "/image/" + photo_name;
+        // 访问http://localhost:8080/get-photo?photo_name=晚安.jpg可以访问图片
+        // 访问http://localhost:8080/get-photo?photo_name=随便名字，只要不存在会抛出异常，http状态码是400
+        byte[] photo = photoService.getPhoto(photo_path);
+        if (null == photo){
+            throw new Exception("文件读取出错");
+        }
+        else {
+            return photo;
+        }
     }
 }

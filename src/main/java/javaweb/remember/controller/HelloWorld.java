@@ -31,7 +31,7 @@ public class HelloWorld {
     @Autowired
     PhotoService photoService;
 
-    @GetMapping(value = "/get-photo", produces = MediaType.IMAGE_JPEG_VALUE)
+    //@GetMapping(value = "/get-photo", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getPhotoTest(@RequestParam("photo_name") String photo_name) throws Exception {
         String photo_path = "K:\\Java Projects\\I-Remember\\image\\" + photo_name;
         // 访问http://localhost:8080/get-photo?photo_name=晚安.jpg可以访问图片
@@ -45,7 +45,7 @@ public class HelloWorld {
         }
     }
 
-    @GetMapping(value = "/delete-photo")
+    //@GetMapping(value = "/delete-photo")
     public String deletePhotoTest(@RequestParam("photo_name") String photo_name) throws Exception {
         String photo_path = "K:\\Java Projects\\I-Remember\\image\\" + photo_name;
         // 访问http://localhost:8080/delete-photo?photo_name=测试.jpg可以删除图片
@@ -59,7 +59,7 @@ public class HelloWorld {
         }
     }
 
-    @PostMapping("/upload-photo")
+    //@PostMapping("/upload-photo")
     public String uploadPhotoTest(@RequestParam(value = "photo") MultipartFile photoFile) {
         String photo_path = "K:\\Java Projects\\I-Remember\\image\\" + photoFile.getOriginalFilename();
         int i = photoService.uploadPhoto(photo_path, photoFile);
