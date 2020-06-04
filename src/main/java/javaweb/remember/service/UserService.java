@@ -16,7 +16,7 @@ public interface UserService {
 
     UserInfoVo findUserInfoVoById(Long id);
 
-    boolean changePassword(Long email, String newPassword);
+    boolean changePassword(String email, String newPassword);
 
     String findEmailById(Long id);
 }

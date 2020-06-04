@@ -15,7 +15,7 @@ public enum ResultEnum {
     REMEMBER_PUBLISH_SUCCESS(11,"记忆发布成功"),
 
     SEND_VERIFICATION_CODE_FAIL(-1,"验证码发送失败"),
-    NO_VERIFICATION_CODE(-2,"请先获取验证码"),
+    NO_LOGIN(-2,"请先登录"),
     VERIFICATION_CODE_FAILURE(-3,"验证码已失效，请重新获取"),
     VERIFICATION_CODE_INCORRECT(-4,"验证码错误，请核对后重新输入"),
     HAVE_REGISTERED(-5,"您已注册过I-Remember，请直接登录"),

@@ -90,8 +90,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean changePassword(Long id, String newPassword) {
-        int updated = userRepository.updatePassword(id,newPassword);
+    public boolean changePassword(String email, String newPassword) {
+        int updated = userRepository.updatePassword(email,newPassword);
         if(updated!=1){
             //事务回滚
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

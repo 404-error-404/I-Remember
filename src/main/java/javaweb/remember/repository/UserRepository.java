@@ -27,6 +27,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     int updatePersonalSignature(Long id, String personalSignature);
 
     @Modifying
-    @Query(value = "update User user set user.password = ?2 where user.id = ?1")
-    int updatePassword(Long id, String newPassword);
+    @Query(value = "update User user set user.password = ?2 where user.email = ?1")
+    int updatePassword(String email, String newPassword);
 }

@@ -203,13 +203,18 @@ public class UserController {
 
     @PostMapping("/password")
     public ResultVo changePassword(HttpServletRequest request,
+                                   @RequestParam(name = "email")
+                                   @Email @NotBlank(message = "邮箱不能为空")
+                                   @NotNull(message = "邮箱不能为空") String email,
                                    @RequestParam("newPassword")
                                    @Length(min = 6,max = 20)
                                    @NotNull @NotBlank String newPassword,
                                    @RequestParam("code")
                                    @NotNull @NotBlank String code) {
-        Long id = (Long) request.getAttribute("id");
-        String email = userService.findEmailById(id);
+        User user = userService.findByEmail(email);
+        if(user == null){
+            return new ResultVo(ResultEnum.HAVE_NOT_REGISTERED);
+        }
         String verificationCode = redisService.get(email);
         //验证码失效
         if (verificationCode == null) {
@@ -221,7 +226,7 @@ public class UserController {
         }
         //验证码正确，删除redis中的验证码
         redisService.delete(email);
-        if (userService.changePassword(id, newPassword)) {
+        if (userService.changePassword(email, newPassword)) {
             return new ResultVo(ResultEnum.CHANGE_PASSWORD_SUCCESS);
         }
         return new ResultVo(ResultEnum.CHANGE_PASSWORD_FAIL);
