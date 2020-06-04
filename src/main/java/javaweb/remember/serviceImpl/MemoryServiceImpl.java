@@ -25,4 +25,9 @@ public class MemoryServiceImpl implements MemoryService {
     public List<Memory> findAllByCreator(Long id){
         return memoryRepository.findAllByCreator(id);
     }
+
+    @Override
+    public Memory randomMemory(){
+        return memoryRepository.randomMemory();
+    }
 }

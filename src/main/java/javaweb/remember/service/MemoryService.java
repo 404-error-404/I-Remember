@@ -12,4 +12,6 @@ public interface MemoryService {
     Memory findById(Long ID);
 
     List<Memory> findAllByCreator(Long id);
+
+    Memory randomMemory();
 }

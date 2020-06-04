@@ -172,4 +172,21 @@ public class MemoryController {
 
         return resultVo;
     }
+
+    @PostMapping("/randomMemory")
+    public ResultVo randomMemory(){
+        ResultVo resultVo;
+        Map<String,Object> map1 = new HashMap<>();
+        Map<String,Object> map2 = new HashMap<>();
+
+        Memory m = memoryService.randomMemory();
+        map1.put("photo",DataBaseArrayUtils.StringToArray(m.getImages()));
+        map1.put("content",m.getContent());
+        map2.put("Memory",map1);
+
+        resultVo = new ResultVo(ResultEnum.RANDOM_MEMORY_SUCCESS);
+        resultVo.setData(map2);
+
+        return resultVo;
+    }
 }
