@@ -30,6 +30,8 @@ public enum ResultEnum {
     CHANGE_PASSWORD_FAIL(-11,"修改密码失败"),
     REMEMBER_PUBLISH_FAIL(-20,"记忆发布失败"),
     MEMORY_SHOW_FAIL(-21,"记忆显示失败"),
+    PICTURE_TYPE_ERROR(-22,"非图片类型"),
+    PICTURE_FILEFOLDER_NOT_EXIST(-23,"图片保存失败"),
     TAGS_GET_FAIL(-25,"标签集合获取失败"),
     ;
     private int code;

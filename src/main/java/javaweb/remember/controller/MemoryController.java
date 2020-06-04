@@ -49,6 +49,22 @@ public class MemoryController {
         //图片储存
         for(MultipartFile image:images){
             String newImageName = ImageNameUtils.reFileName(image.getOriginalFilename(), userId);
+            String filePath = path + "/" + newImageName;
+            int i = photoService.uploadPhoto(filePath,image);
+            if(i == 0){
+                allImages[num] = newImageName;
+                num++;
+            }
+            else if(i == 2 || i == 3){
+                resultVo = new ResultVo(ResultEnum.PICTURE_FILEFOLDER_NOT_EXIST);
+                return  resultVo;
+            }
+            else if(i == 1){
+                resultVo = new ResultVo(ResultEnum.PICTURE_TYPE_ERROR);
+                return resultVo;
+            }
+
+            /*
             File dest = new File(path + "/" + newImageName);
             if(!dest.getParentFile().exists()){ //判断文件父目录是否存在
                 dest.getParentFile().mkdir();
@@ -61,8 +77,8 @@ public class MemoryController {
                 e.printStackTrace();
                 return new ResultVo(-100, e.getMessage(), null);
             }
+             */
         }
-
         //数据存入数据库
         Memory m = new Memory();
         Memory m2;
