@@ -15,6 +15,7 @@ public enum ResultEnum {
     REMEMBER_PUBLISH_SUCCESS(11,"记忆发布成功"),
     MEMORY_SHOW_SUCCESS(12,"记忆显示成功"),
     TAGS_GET_SUCCESS(15,"标签集合获取成功"),
+    RANDOM_MEMORY_SUCCESS(20,"随机获取记忆成功"),
 
     SEND_VERIFICATION_CODE_FAIL(-1,"验证码发送失败"),
     NO_LOGIN(-2,"请先登录"),
@@ -29,7 +30,9 @@ public enum ResultEnum {
     CHANGE_PASSWORD_FAIL(-11,"修改密码失败"),
     REMEMBER_PUBLISH_FAIL(-20,"记忆发布失败"),
     MEMORY_SHOW_FAIL(-21,"记忆显示失败"),
-    TAGS_GET_FAIL(-25,"标签集合获取成功"),
+    PICTURE_TYPE_ERROR(-22,"非图片类型"),
+    PICTURE_FILEFOLDER_NOT_EXIST(-23,"图片保存失败"),
+    TAGS_GET_FAIL(-25,"标签集合获取失败"),
     ;
     private int code;
     private String message;

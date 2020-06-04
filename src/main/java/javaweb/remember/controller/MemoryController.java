@@ -173,6 +173,54 @@ public class MemoryController {
         return resultVo;
     }
 
+    @PostMapping("/randomMemory")
+    public ResultVo randomMemory(){
+        ResultVo resultVo;
+        Map<String,Object> map1 = new HashMap<>();
+        Map<String,Object> map2 = new HashMap<>();
+
+        Memory m = memoryService.randomMemory();
+        map1.put("photo",DataBaseArrayUtils.StringToArray(m.getImages()));
+        map1.put("content",m.getContent());
+        map2.put("Memory",map1);
+
+        resultVo = new ResultVo(ResultEnum.RANDOM_MEMORY_SUCCESS);
+        resultVo.setData(map2);
+
+        return resultVo;
+    }
+
+    @PostMapping("/searchMemory")
+    public ResultVo searchMemory(@RequestParam("searchStr") String searchStr,
+                                     HttpServletRequest request){
+        ResultVo resultVo = new ResultVo();
+        List<Map<String,Object>> mapList = new ArrayList<>();
+
+        Long id = (Long)request.getAttribute("id");
+        List<Memory> memoryList = memoryService.searchMemory(searchStr);
+
+        for(Memory m: memoryList){
+            Map<String,Object> map = new HashMap<>();
+            map.put("id",m.getId());
+            map.put("tags",DataBaseArrayUtils.StringToArray(m.getTags()));
+            map.put("title",m.getTitle());
+            map.put("content",m.getContent());
+            map.put("images",DataBaseArrayUtils.StringToArray(m.getImages()));
+            map.put("creator",m.getCreator());
+            map.put("createTime",m.getCreateTime());
+            mapList.add(map);
+        }
+
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("memoryList",mapList);
+
+        resultVo.setCode(40);
+        resultVo.setMessage("搜索记忆成功");
+        resultVo.setData(temp);
+
+        return resultVo;
+    }
+
     @PostMapping("/deleteMemory")
     public ResultVo deleteMemory(HttpServletRequest request, @RequestParam("memoryID") Long[] memoryIds){
         // 待返回结果
@@ -210,6 +258,94 @@ public class MemoryController {
             }
             resultVo.setData("");
         }
+        return resultVo;
+    }
+
+    @PostMapping("/deleteMemory")
+    public ResultVo deleteMemory(HttpServletRequest request, @RequestParam("memoryID") Long[] memoryIds){
+        // 待返回结果
+        ResultVo resultVo = new ResultVo();
+        // 获取用户id
+        Long userID = (Long)request.getAttribute("id");
+        for (Long memoryId:memoryIds){
+            // 获取记忆详情
+            Memory memory;
+            try {
+                memory = memoryService.findById(memoryId);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                resultVo.setCode(31);
+                resultVo.setMessage("记忆不存在");
+                resultVo.setData("");
+                return resultVo;
+            }
+            // 核对记忆拥有者
+            if (!memory.getCreator().equals(userID)){
+                resultVo.setCode(32);
+                resultVo.setMessage("权限不足");
+                resultVo.setData("");
+                return resultVo;
+            }
+            // 删除记忆
+            if (memoryService.deleteMemoryByID(memoryId)){
+                resultVo.setCode(33);
+                resultVo.setMessage("删除成功");
+            }
+            else {
+                resultVo.setCode(31);
+                resultVo.setMessage("权限不足");
+            }
+            resultVo.setData("");
+        }
+        return resultVo;
+    }
+
+    @PostMapping("/randomMemory")
+    public ResultVo randomMemory(){
+        ResultVo resultVo;
+        Map<String,Object> map1 = new HashMap<>();
+        Map<String,Object> map2 = new HashMap<>();
+
+        Memory m = memoryService.randomMemory();
+        map1.put("photo",DataBaseArrayUtils.StringToArray(m.getImages()));
+        map1.put("content",m.getContent());
+        map2.put("Memory",map1);
+
+        resultVo = new ResultVo(ResultEnum.RANDOM_MEMORY_SUCCESS);
+        resultVo.setData(map2);
+
+        return resultVo;
+    }
+
+    @PostMapping("/searchMemory")
+    public ResultVo searchMemory(@RequestParam("searchStr") String searchStr,
+                                 HttpServletRequest request){
+        ResultVo resultVo = new ResultVo();
+        List<Map<String,Object>> mapList = new ArrayList<>();
+
+        Long id = (Long)request.getAttribute("id");
+        List<Memory> memoryList = memoryService.searchMemory(searchStr);
+
+        for(Memory m: memoryList){
+            Map<String,Object> map = new HashMap<>();
+            map.put("id",m.getId());
+            map.put("tags",DataBaseArrayUtils.StringToArray(m.getTags()));
+            map.put("title",m.getTitle());
+            map.put("content",m.getContent());
+            map.put("images",DataBaseArrayUtils.StringToArray(m.getImages()));
+            map.put("creator",m.getCreator());
+            map.put("createTime",m.getCreateTime());
+            mapList.add(map);
+        }
+
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("memoryList",mapList);
+
+        resultVo.setCode(40);
+        resultVo.setMessage("搜索记忆成功");
+        resultVo.setData(temp);
+
         return resultVo;
     }
 }

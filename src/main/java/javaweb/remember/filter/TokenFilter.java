@@ -25,6 +25,7 @@ public class TokenFilter implements Filter {
     private static final Long USER_TOKEN_EXPIRE_TIME = 3600L;
     //不用过滤的路由
     private static final String[] URIS = {"/login","/sign_up","/verify_code","/password", "/get-photo"};
+    private static final String[] URIS = {"/login","/sign_up","/verify_code","/password","/randomMemory"};
 
     @Autowired
     RedisService redisService;

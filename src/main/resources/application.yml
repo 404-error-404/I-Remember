@@ -14,6 +14,10 @@ spring:
         smtp:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
+  servlet:
+    multipart:
+      max-request-size: 5MB
+      max-file-size: 5MB
 
   datasource:
     # 数据库创建指令，用户：javaweb；密码：JavaWeb2020；数据库：javaweb

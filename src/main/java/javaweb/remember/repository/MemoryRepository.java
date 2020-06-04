@@ -19,4 +19,10 @@ public interface MemoryRepository extends JpaRepository<Memory,Long> {
     List<Memory> findAllByCreator(Long id);
 
     void deleteById(Long id);
+
+    @Query(value = "select * from Memory order by rand() limit 1", nativeQuery = true)
+    Memory randomMemory();
+
+    @Query(value = "select * from Memory where tags like %?1% OR title like %?1% OR content like %?1%", nativeQuery = true)
+    List<Memory> searchMemory(String searchStr);
 }

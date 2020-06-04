@@ -15,4 +15,8 @@ public interface MemoryService {
 
     // 删除记忆
     boolean deleteMemoryByID(Long id);
+
+    Memory randomMemory();
+
+    List<Memory> searchMemory(String searchStr);
 }
