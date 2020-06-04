@@ -172,4 +172,44 @@ public class MemoryController {
 
         return resultVo;
     }
+
+    @PostMapping("/deleteMemory")
+    public ResultVo deleteMemory(HttpServletRequest request, @RequestParam("memoryID") Long[] memoryIds){
+        // 待返回结果
+        ResultVo resultVo = new ResultVo();
+        // 获取用户id
+        Long userID = (Long)request.getAttribute("id");
+        for (Long memoryId:memoryIds){
+            // 获取记忆详情
+            Memory memory;
+            try {
+                memory = memoryService.findById(memoryId);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                resultVo.setCode(31);
+                resultVo.setMessage("记忆不存在");
+                resultVo.setData("");
+                return resultVo;
+            }
+            // 核对记忆拥有者
+            if (!memory.getCreator().equals(userID)){
+                resultVo.setCode(32);
+                resultVo.setMessage("权限不足");
+                resultVo.setData("");
+                return resultVo;
+            }
+            // 删除记忆
+            if (memoryService.deleteMemoryByID(memoryId)){
+                resultVo.setCode(33);
+                resultVo.setMessage("删除成功");
+            }
+            else {
+                resultVo.setCode(31);
+                resultVo.setMessage("权限不足");
+            }
+            resultVo.setData("");
+        }
+        return resultVo;
+    }
 }

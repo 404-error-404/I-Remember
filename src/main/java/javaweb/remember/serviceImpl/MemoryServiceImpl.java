@@ -25,4 +25,17 @@ public class MemoryServiceImpl implements MemoryService {
     public List<Memory> findAllByCreator(Long id){
         return memoryRepository.findAllByCreator(id);
     }
+
+    // 删除记忆
+    @Override
+    public boolean deleteMemoryByID(Long id){
+        try {
+            memoryRepository.deleteById(id);
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    };
 }

@@ -23,8 +23,11 @@ spring:
     url: jdbc:mysql://39.98.32.66:3306/iremember?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
     username: IRemember
     password: Remember2020
-
     driver-class-name: com.mysql.cj.jdbc.Driver
+    dbcp2:
+      test-on-borrow: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 3600000
   jpa:
     # 将SQL语句写入日志文件
     show-sql: true

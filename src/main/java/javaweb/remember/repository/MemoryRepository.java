@@ -17,4 +17,6 @@ public interface MemoryRepository extends JpaRepository<Memory,Long> {
 
     @Query(value = "select * from Memory memory where memory.creator = ?1", nativeQuery = true)
     List<Memory> findAllByCreator(Long id);
+
+    void deleteById(Long id);
 }

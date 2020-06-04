@@ -12,4 +12,7 @@ public interface MemoryService {
     Memory findById(Long ID);
 
     List<Memory> findAllByCreator(Long id);
+
+    // 删除记忆
+    boolean deleteMemoryByID(Long id);
 }
