@@ -6,10 +6,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MemoryRepository extends JpaRepository<Memory,Long> {
 
     @Modifying
     @Query(value = "delete from Memory memory where memory.createTime < ?1")
     void memoryDisappear(String date);
+
+    @Query(value = "select * from Memory memory where memory.creator = ?1", nativeQuery = true)
+    List<Memory> findAllByCreator(Long id);
 }

@@ -7,6 +7,8 @@ import javaweb.remember.service.MemoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MemoryServiceImpl implements MemoryService {
 
@@ -18,4 +20,9 @@ public class MemoryServiceImpl implements MemoryService {
 
     @Override
     public Memory findById(Long ID){return memoryRepository.findById(ID).get();}
+
+    @Override
+    public List<Memory> findAllByCreator(Long id){
+        return memoryRepository.findAllByCreator(id);
+    }
 }

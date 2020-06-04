@@ -3,9 +3,13 @@ package javaweb.remember.service;
 
 import javaweb.remember.entity.Memory;
 
+import java.util.List;
+
 public interface MemoryService {
 
     Memory save(Memory memory);
 
     Memory findById(Long ID);
+
+    List<Memory> findAllByCreator(Long id);
 }

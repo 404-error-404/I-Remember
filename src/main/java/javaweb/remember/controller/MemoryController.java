@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -137,6 +139,36 @@ public class MemoryController {
         map.put("tabs",tagsArray);
         resultVo = new ResultVo(ResultEnum.TAGS_GET_SUCCESS);
         resultVo.setData(map);
+
+        return resultVo;
+    }
+
+    @PostMapping("/getCreatorAllMemory")
+    public ResultVo getCreatorAllMemory(HttpServletRequest request){
+        ResultVo resultVo = new ResultVo();
+        List<Map<String,Object>> mapList = new ArrayList<>();
+
+        Long id = (Long)request.getAttribute("id");
+        List<Memory> memoryList = memoryService.findAllByCreator(id);
+
+        for(Memory m: memoryList){
+            Map<String,Object> map = new HashMap<>();
+            map.put("id",m.getId());
+            map.put("tags",DataBaseArrayUtils.StringToArray(m.getTags()));
+            map.put("title",m.getTitle());
+            map.put("content",m.getContent());
+            map.put("images",DataBaseArrayUtils.StringToArray(m.getImages()));
+            map.put("creator",m.getCreator());
+            map.put("createTime",m.getCreateTime());
+            mapList.add(map);
+        }
+
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("memoryList",mapList);
+
+        resultVo.setCode(30);
+        resultVo.setMessage("获取用户全部记忆成功");
+        resultVo.setData(temp);
 
         return resultVo;
     }
