@@ -24,8 +24,7 @@ public class TokenFilter implements Filter {
     //设置用户token过期时间为一个小时（3600秒）
     private static final Long USER_TOKEN_EXPIRE_TIME = 3600L;
     //不用过滤的路由
-    private static final String[] URIS = {"/login","/sign_up","/verify_code","/password", "/get-photo"};
-    private static final String[] URIS = {"/login","/sign_up","/verify_code","/password","/randomMemory"};
+    private static final String[] URIS = {"/login","/sign_up","/verify_code","/password","/randomMemory", "/get-photo"};
 
     @Autowired
     RedisService redisService;
