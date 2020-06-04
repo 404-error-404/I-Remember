@@ -14,4 +14,6 @@ public interface MemoryService {
     List<Memory> findAllByCreator(Long id);
 
     Memory randomMemory();
+
+    List<Memory> searchMemory(String searchStr);
 }

@@ -30,4 +30,9 @@ public class MemoryServiceImpl implements MemoryService {
     public Memory randomMemory(){
         return memoryRepository.randomMemory();
     }
+
+    @Override
+    public List<Memory> searchMemory(String searchStr){
+        return memoryRepository.searchMemory(searchStr);
+    }
 }

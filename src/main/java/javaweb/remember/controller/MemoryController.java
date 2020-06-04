@@ -205,4 +205,35 @@ public class MemoryController {
 
         return resultVo;
     }
+
+    @PostMapping("/searchMemory")
+    public ResultVo searchMemory(@RequestParam("searchStr") String searchStr,
+                                     HttpServletRequest request){
+        ResultVo resultVo = new ResultVo();
+        List<Map<String,Object>> mapList = new ArrayList<>();
+
+        Long id = (Long)request.getAttribute("id");
+        List<Memory> memoryList = memoryService.searchMemory(searchStr);
+
+        for(Memory m: memoryList){
+            Map<String,Object> map = new HashMap<>();
+            map.put("id",m.getId());
+            map.put("tags",DataBaseArrayUtils.StringToArray(m.getTags()));
+            map.put("title",m.getTitle());
+            map.put("content",m.getContent());
+            map.put("images",DataBaseArrayUtils.StringToArray(m.getImages()));
+            map.put("creator",m.getCreator());
+            map.put("createTime",m.getCreateTime());
+            mapList.add(map);
+        }
+
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("memoryList",mapList);
+
+        resultVo.setCode(40);
+        resultVo.setMessage("搜索记忆成功");
+        resultVo.setData(temp);
+
+        return resultVo;
+    }
 }
