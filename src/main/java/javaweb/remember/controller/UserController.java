@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -141,12 +143,15 @@ public class UserController {
         if (!user.getPassword().equals(password)) {
             return new ResultVo(ResultEnum.PASSWORD_INCORRECT);
         }
+        Map<String,String> returnMap = new HashMap<>();
         String token = UUID.randomUUID().toString();
         //若该用户已登录，删除redis中已有的token，写入新的token，并设置过期时间
         redisService.set(token, email);
         redisService.expire(token, USER_TOKEN_EXPIRE_TIME);
+        returnMap.put("username",user.getUsername());
+        returnMap.put("token",token);
         ResultVo resultVo = new ResultVo(ResultEnum.LOGIN_SUCCESS);
-        resultVo.setData(token);
+        resultVo.setData(returnMap);
         return resultVo;
     }
 
