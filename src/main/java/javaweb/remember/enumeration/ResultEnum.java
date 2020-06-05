@@ -16,6 +16,7 @@ public enum ResultEnum {
     MEMORY_SHOW_SUCCESS(12,"记忆显示成功"),
     TAGS_GET_SUCCESS(15,"标签集合获取成功"),
     RANDOM_MEMORY_SUCCESS(20,"随机获取记忆成功"),
+    GET_ALL_MEMORY_SUCCESS(21,"获取所有记忆成功"),
 
     SEND_VERIFICATION_CODE_FAIL(-1,"验证码发送失败"),
     NO_LOGIN(-2,"请先登录"),

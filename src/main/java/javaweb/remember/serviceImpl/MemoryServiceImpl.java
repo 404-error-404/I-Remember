@@ -22,7 +22,12 @@ public class MemoryServiceImpl implements MemoryService {
 
     @Override
     public Memory findById(Long ID) {
-        return memoryRepository.findById(ID).get();
+        if(memoryRepository.findById(ID).isPresent()){
+            return memoryRepository.findById(ID).get();
+        }
+        else{
+            return null;
+        }
     }
 
     @Override
@@ -53,4 +58,7 @@ public class MemoryServiceImpl implements MemoryService {
     public List<Memory> searchMemory(String searchStr) {
         return memoryRepository.searchMemory(searchStr);
     }
+
+    @Override
+    public List<Memory> findAll(){return memoryRepository.findAll();}
 }

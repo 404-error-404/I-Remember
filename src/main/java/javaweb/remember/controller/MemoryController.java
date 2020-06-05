@@ -8,6 +8,7 @@ import javaweb.remember.service.PhotoService;
 import javaweb.remember.service.RedisService;
 import javaweb.remember.utils.DataBaseArrayUtils;
 import javaweb.remember.utils.ImageNameUtils;
+import javaweb.remember.vo.MemoryVo;
 import javaweb.remember.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -258,6 +259,34 @@ public class MemoryController {
             }
             resultVo.setData("");
         }
+        return resultVo;
+    }
+
+    @PostMapping("/findAllMemory")
+    public ResultVo findAllMemory(){
+        ResultVo resultVo;
+        List<MemoryVo> memoryVoList = new ArrayList<>();
+        Map<String,Object> map = new HashMap<>();
+
+        List<Memory> memoryList = memoryService.findAll();
+        for(Memory m: memoryList){
+            MemoryVo memoryVo = new MemoryVo();
+            memoryVo.setId(m.getId());
+            memoryVo.setContent(m.getContent());
+            memoryVo.setTitle(m.getTitle());
+            memoryVo.setCreator(m.getCreator());
+            memoryVo.setCreateTime(m.getCreateTime());
+            memoryVo.setImages(DataBaseArrayUtils.StringToArray(m.getImages()));
+            memoryVo.setTags(DataBaseArrayUtils.StringToArray(m.getTags()));
+
+            memoryVoList.add(memoryVo);
+        }
+
+        map.put("length",memoryList.size());
+        map.put("Memory",memoryVoList);
+        resultVo = new ResultVo(ResultEnum.GET_ALL_MEMORY_SUCCESS);
+        resultVo.setData(map);
+
         return resultVo;
     }
 }

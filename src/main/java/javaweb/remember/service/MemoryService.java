@@ -19,4 +19,6 @@ public interface MemoryService {
     Memory randomMemory();
 
     List<Memory> searchMemory(String searchStr);
+
+    List<Memory> findAll();
 }

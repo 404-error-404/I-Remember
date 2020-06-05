@@ -21,18 +21,18 @@ public class GlobalExceptionHandler {
     //数据类型错误异常
     @ExceptionHandler(IllegalStateException.class)
     public ResultVo handleIllegalStateException(IllegalStateException e){
-        return new ResultVo(-100, e.getMessage(), null);
+        return new ResultVo(-101, e.getMessage(), null);
     }
 
     //文件读写异常
     @ExceptionHandler(IOException.class)
     public ResultVo handleIOException(IOException e){
-        return new ResultVo(-100, e.getMessage(), null);
+        return new ResultVo(-102, e.getMessage(), null);
     }
 
     //空指针异常
     @ExceptionHandler(java.util.NoSuchElementException.class)
     public ResultVo handleNoSuchElementException(NoSuchElementException e){
-        return new ResultVo(-100,e.getMessage(),null);
+        return new ResultVo(-103,e.getMessage(),null);
     }
 }
