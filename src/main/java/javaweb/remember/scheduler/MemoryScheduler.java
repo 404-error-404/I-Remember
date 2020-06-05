@@ -19,6 +19,9 @@ public class MemoryScheduler {
     @Autowired
     MemoryRepository memoryRepository;
 
+    /**
+     * 每天凌晨检索所有记忆，如果记忆时间是6个月前则删除
+     */
     @Scheduled(cron = "0 0 0 ? * *")
     @Transactional
     public void memoryDisappear(){

@@ -49,22 +49,6 @@ public class MemoryController {
         //图片储存
         for(MultipartFile image:images){
             String newImageName = ImageNameUtils.reFileName(image.getOriginalFilename(), userId);
-            String filePath = path + "/" + newImageName;
-            int i = photoService.uploadPhoto(filePath,image);
-            if(i == 0){
-                allImages[num] = newImageName;
-                num++;
-            }
-            else if(i == 2 || i == 3){
-                resultVo = new ResultVo(ResultEnum.PICTURE_FILEFOLDER_NOT_EXIST);
-                return  resultVo;
-            }
-            else if(i == 1){
-                resultVo = new ResultVo(ResultEnum.PICTURE_TYPE_ERROR);
-                return resultVo;
-            }
-
-            /*
             File dest = new File(path + "/" + newImageName);
             if(!dest.getParentFile().exists()){ //判断文件父目录是否存在
                 dest.getParentFile().mkdir();
@@ -77,8 +61,8 @@ public class MemoryController {
                 e.printStackTrace();
                 return new ResultVo(-100, e.getMessage(), null);
             }
-             */
         }
+
         //数据存入数据库
         Memory m = new Memory();
         Memory m2;
@@ -234,6 +218,46 @@ public class MemoryController {
         resultVo.setMessage("搜索记忆成功");
         resultVo.setData(temp);
 
+        return resultVo;
+    }
+
+    @PostMapping("/deleteMemory")
+    public ResultVo deleteMemory(HttpServletRequest request, @RequestParam("memoryID") Long[] memoryIds){
+        // 待返回结果
+        ResultVo resultVo = new ResultVo();
+        // 获取用户id
+        Long userID = (Long)request.getAttribute("id");
+        for (Long memoryId:memoryIds){
+            // 获取记忆详情
+            Memory memory;
+            try {
+                memory = memoryService.findById(memoryId);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                resultVo.setCode(31);
+                resultVo.setMessage("记忆不存在");
+                resultVo.setData("");
+                return resultVo;
+            }
+            // 核对记忆拥有者
+            if (!memory.getCreator().equals(userID)){
+                resultVo.setCode(32);
+                resultVo.setMessage("权限不足");
+                resultVo.setData("");
+                return resultVo;
+            }
+            // 删除记忆
+            if (memoryService.deleteMemoryByID(memoryId)){
+                resultVo.setCode(33);
+                resultVo.setMessage("删除成功");
+            }
+            else {
+                resultVo.setCode(31);
+                resultVo.setMessage("权限不足");
+            }
+            resultVo.setData("");
+        }
         return resultVo;
     }
 }

@@ -16,23 +16,41 @@ public class MemoryServiceImpl implements MemoryService {
     private MemoryRepository memoryRepository;
 
     @Override
-    public Memory save(Memory memory){return memoryRepository.save(memory);}
-
-    @Override
-    public Memory findById(Long ID){return memoryRepository.findById(ID).get();}
-
-    @Override
-    public List<Memory> findAllByCreator(Long id){
-        return memoryRepository.findAllByCreator(id);
+    public Memory save(Memory memory) {
+        return memoryRepository.save(memory);
     }
 
     @Override
-    public Memory randomMemory(){
+    public Memory findById(Long ID) {
+        return memoryRepository.findById(ID).get();
+    }
+
+    @Override
+    public List<Memory> findAllByCreator(Long id) {
+        return memoryRepository.findAllByCreator(id);
+    }
+
+    // 删除记忆
+    @Override
+    public boolean deleteMemoryByID(Long id) {
+        try {
+            memoryRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    ;
+
+    @Override
+    public Memory randomMemory() {
         return memoryRepository.randomMemory();
     }
 
     @Override
-    public List<Memory> searchMemory(String searchStr){
+    public List<Memory> searchMemory(String searchStr) {
         return memoryRepository.searchMemory(searchStr);
     }
 }

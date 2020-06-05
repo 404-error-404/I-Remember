@@ -85,6 +85,11 @@ public class UserController {
         return new ResultVo(ResultEnum.SEND_VERIFICATION_CODE_FAIL);
     }
 
+    /**
+     * 用户注册
+     * @param signUpVo 注册界面VO，包含用户名，密码，邮箱，验证码
+     * @return 返回封装类
+     */
     @PostMapping(value = "/sign_up")
     public ResultVo userSignUp(@RequestBody SignUpVo signUpVo) {
         String code = redisService.get(signUpVo.getEmail());
@@ -117,7 +122,7 @@ public class UserController {
      *
      * @param email    邮箱
      * @param password 密码
-     * @return json格式返回值
+     * @return 返回封装类
      */
     @PostMapping(value = "/login")
     public ResultVo userLogin(
@@ -156,6 +161,11 @@ public class UserController {
 //        return photoService.getImage(type, "test");
 //    }
 
+    /**
+     * 获取用户信息
+     * @param request Http请求
+     * @return 返回封装类
+     */
     @PostMapping("/userInfo")
     public ResultVo getUserInfo(HttpServletRequest request) {
         Long id = (Long) request.getAttribute("id");
@@ -168,6 +178,12 @@ public class UserController {
         return resultVo;
     }
 
+    /**
+     * 修改用户名
+     * @param request Http请求
+     * @param username 新用户名
+     * @return 返回封装类
+     */
     @PostMapping("/username")
     public ResultVo changeUsername(HttpServletRequest request,
                                    @RequestParam("username")
@@ -179,6 +195,12 @@ public class UserController {
         return new ResultVo(ResultEnum.CHANGE_USERNAME_FAIL);
     }
 
+    /**
+     * 修改生日
+     * @param request Http请求
+     * @param birthday 新的生日 格式为XXXX-XX-XX
+     * @return 返回封装类
+     */
     @PostMapping("/birthday")
     public ResultVo changeBirthday(HttpServletRequest request,
                                    @RequestParam("birthday")
@@ -190,6 +212,12 @@ public class UserController {
         return new ResultVo(ResultEnum.CHANGE_BIRTHDAY_FAIL);
     }
 
+    /**
+     * 修改个性签名
+     * @param request Http请求
+     * @param personalSignature 新的个性签名
+     * @return 返回封装类
+     */
     @PostMapping("/personalSignature")
     public ResultVo changePersonalSignature(HttpServletRequest request,
                                             @RequestParam("personalSignature")
@@ -201,6 +229,14 @@ public class UserController {
         return new ResultVo(ResultEnum.CHANGE_SIGNATURE_FAIL);
     }
 
+    /**
+     * 修改密码
+     * @param request Http请求
+     * @param email 要修改密码的邮箱
+     * @param newPassword 新的密码
+     * @param code 验证码
+     * @return 返回封装类
+     */
     @PostMapping("/password")
     public ResultVo changePassword(HttpServletRequest request,
                                    @RequestParam(name = "email")
