@@ -10,6 +10,7 @@ import javaweb.remember.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 import javax.servlet.*;
@@ -42,8 +43,13 @@ public class TokenFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "*");
-        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "token");
+
+        if("OPTIONS".equals(request.getMethod())){
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            return;
+        }
 
         String requestURI = request.getRequestURI();
         for(String uri : URIS){
